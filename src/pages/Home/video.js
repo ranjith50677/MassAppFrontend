@@ -17,14 +17,14 @@ import Box from "@mui/joy/Box";
 import "./style.scss";
 import Header from "../../header/index.js";
 import { useEffect } from "react";
-import {Follow, getFollow, likes, profile, unFollow, unlikes, videos } from "../../api service/api";
+import {Follow, likes, profile, unFollow, unlikes, videos } from "../../api service/api";
 import { Fragment } from "react";
 import ShowMoreText from "react-show-more-text";
 import moment from "moment/moment"; 
 import CommentModal from "../../components/model";
 import Parsonal from "../../components/account";
 import { Button } from "@mui/material";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 
 export default function RecipeReviewCard() { 
@@ -104,6 +104,7 @@ export default function RecipeReviewCard() {
         {allvideo?.map((i, index) => {
           return (
             <Fragment key={index}>
+          {console.log(i)}
               {comment && index === zIndex ? <CommentModal comment={comment} setComment={setComment} i={i} userId={id}  index={index}  zIndex={zIndex} setZIndex={setZIndex} setRefresh={setRefresh}  refresh={refresh} 
               /> :null}
               <center>

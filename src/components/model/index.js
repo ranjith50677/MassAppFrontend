@@ -67,6 +67,7 @@ export default function CommentModal({
   const handleClose1 = () => {
     setAnchorEl(null);
   };
+  console.log(i);
 console.log(refresh);
   const viewcommet = async (i) => {
     if (text === "") return toast.error("epmty comment");

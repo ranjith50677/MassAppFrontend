@@ -1,3 +1,9 @@
+import jwt_decode from "jwt-decode";
+let token = localStorage.getItem("token");
+let decoded
+if(token){
+   decoded = jwt_decode(token);
+}
 let baseUrl = "http://localhost:7373/api/";
 /***************************************************************************************USER API ********************************************************/
 export const userLogin = async (body) => {
@@ -35,6 +41,7 @@ export const userReg = async (body) => {
   let data = await response?.json();
   return { data: data, ok: true };
 };
+
 export const profile = async() => {
   let token = localStorage.getItem("token");
   let gettoken=JSON.parse(token)
@@ -43,11 +50,11 @@ export const profile = async() => {
     mode: "cors",
     headers: {
       "Content-Type": "application/json",
-      token:gettoken
+       token:gettoken
     },
  
   };
-  const response = await fetch(`${baseUrl}user/profile`, requestOptions);
+  const response = await fetch(`${baseUrl}user/profile/${decoded?.id}`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -202,7 +209,7 @@ export const unlikes = async(id) => {
     },
  
   };
-  const response = await fetch(`${baseUrl}video/unlikevideo/${id}`, requestOptions);
+  const response = await fetch(`${baseUrl}video/unlike/${id}`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -210,6 +217,7 @@ export const unlikes = async(id) => {
   let data = await response?.json();
   return { data: data, ok: true };
 }
+
 export const Comment = async(id,body) => {
   let token = localStorage.getItem("token");
   let gettoken=JSON.parse(token)
@@ -243,7 +251,7 @@ export const deleteComment = async(id,body) => {
     },
     body: JSON.stringify(body),
   };
-  const response = await fetch(`${baseUrl}video/commentdelete/${id}`, requestOptions);
+  const response = await fetch(`${baseUrl}video/deletecomment/${id}`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -347,7 +355,7 @@ export const UserChat = async (body) => {
     },
     body: JSON.stringify(body),
   };
-  const response = await fetch(`${baseUrl}message/createsinglechat`, requestOptions);
+  const response = await fetch(`${baseUrl}chat/createsinglechat`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -367,7 +375,7 @@ export const getchat = async (id) => {
       token:gettoken
     },
   };
-  const response = await fetch(`${baseUrl}message/getchat/${id}`, requestOptions);
+  const response = await fetch(`${baseUrl}chat/getchatbyid/${id}`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -375,6 +383,7 @@ export const getchat = async (id) => {
   let data = await response?.json();
   return { data: data, ok: true };
 };
+
 export const userGetChat = async () => {
   let token = localStorage.getItem("token");
   let gettoken=JSON.parse(token)
@@ -386,7 +395,7 @@ export const userGetChat = async () => {
       token:gettoken
     },
   };
-  const response = await fetch(`${baseUrl}message/getchatbyuser`, requestOptions);
+  const response = await fetch(`${baseUrl}chat/getchatbyuser`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -429,7 +438,7 @@ export const getByIdChat = async (id ) => {
       token:gettoken
     }, 
   };
-  const response = await fetch(`${baseUrl}message/getchat/${id}`, requestOptions);
+  const response = await fetch(`${baseUrl}chat/getchat/${id}`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -437,6 +446,7 @@ export const getByIdChat = async (id ) => {
   let data = await response?.json();
   return { data: data, ok: true };
 };
+
 export const getchatId = async (id ) => {
   let token = localStorage.getItem("token");
   let gettoken=JSON.parse(token)
@@ -448,7 +458,7 @@ export const getchatId = async (id ) => {
       token:gettoken
     }, 
   };
-  const response = await fetch(`${baseUrl}message/getchatbyid/${id}`, requestOptions);
+  const response = await fetch(`${baseUrl}chat/getchatbyid/${id}`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -489,7 +499,7 @@ export const getgroupchatId = async (id) => {
       token:gettoken
     }, 
   };
-  const response = await fetch(`${baseUrl}chat/getgroupchat/${id}`, requestOptions);
+  const response = await fetch(`${baseUrl}chat/getgroupchatbyid/${id}`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };

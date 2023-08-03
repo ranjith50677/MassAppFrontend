@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import * as React from "react";
 
 import { RiSendPlaneFill } from "react-icons/ri";
@@ -36,9 +37,11 @@ import { Box, Typography } from "@mui/material";
 import ScrollableFeed from "react-scrollable-feed";
 import _ from 'lodash';
 import GroupChat from "./chat";
-
-
+// import jwt_decode from "jwt-decode";
+ 
 const Chat = () => {
+  // let token = localStorage.getItem("token");
+  // let decoded = jwt_decode(token);
   const [data1, setData1] = useState([]);
   const [basicModal, setBasicModal] = useState(false);
   const [removeuser, setRemoveuser] = useState();
@@ -55,13 +58,16 @@ const Chat = () => {
   const user = async () => {
     let data = [];
     let res = await allUser();
+    console.log(res);
     let pro = await profile();
+    console.log(pro);
     let reschat = await userGetChat();
      let sort = _.sortBy(reschat.data,(i)=>{
       return new Date(i?.updatedAt)
      }).reverse()
     setDemo(sort);
-    res?.data?.users.map((i) => {
+    res?.data?.users?.map((i) => {
+      console.log(pro?.data);
       if (i?._id !== pro?.data?.data._id) {
         return data.push({
           value: i?.username,
@@ -194,6 +200,7 @@ const Chat = () => {
                   {demo?.map((i, index) =>(
                   !i.isGroup ? 
                   i?.users.map((j,index) => {
+                  
                       if (j._id !== id) {
                         return (
                           <ul key={index} >
@@ -267,6 +274,7 @@ const Chat = () => {
                         {i?.sendby._id !== id ? (
                           <div key={index} >
                             {" "}
+                      {console.log(i)}
                             <Box>
                               <div
                                 style={{

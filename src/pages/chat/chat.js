@@ -1,10 +1,10 @@
+/* eslint-disable array-callback-return */
 import React, { useEffect } from "react";
 import { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { CiCircleRemove } from "react-icons/ci";
 import {
-  MDBBtn,
   MDBModal,
   MDBModalDialog,
   MDBModalContent,
@@ -32,7 +32,7 @@ export default function GroupChat({
   id,
 }) {
   const [selectuser, setselectuser] = useState([]);
-  const [editselectuser, setEditselectuser] = useState([]);
+  // const [editselectuser, setEditselectuser] = useState([]);
   const [users, setUsers] = useState([]);
   const [editUsers, setEditUsers] = useState([]);
   const [groupName, setGroupName] = useState("");
@@ -50,7 +50,7 @@ export default function GroupChat({
   const adduser = () => {
     let array = [];
     selectuser.map((i) => {
-      array.push(i.id);
+       array.push(i.id);
     });
     setUsers(array);
   };
@@ -75,6 +75,7 @@ console.log(editUsers);
   useEffect(() => {
     getChat()
     adduser()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectuser]);
 
 

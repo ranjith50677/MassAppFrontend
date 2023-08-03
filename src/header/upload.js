@@ -85,7 +85,7 @@ const UploadVideo = () => {
           if (data.url) {
             await axios({
               method: "post",
-              url: "http://192.168.1.43:7373/api/video/create",
+              url: "http://localhost:7373/api/video/create",
               data: {
                 title,
                 description,
