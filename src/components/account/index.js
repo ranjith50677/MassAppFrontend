@@ -6,6 +6,7 @@ import MyAccount from "../../pages/profile/myAccount";
 const Parsonal=({profiledata,open,setOpen})=>{
 const[profileid,setProfileid]=useState("")
 useEffect(()=>{
+    console.log(profiledata.postedBy);
     setProfileid(profiledata?.postedBy)
     // eslint-disable-next-line
 },[])
