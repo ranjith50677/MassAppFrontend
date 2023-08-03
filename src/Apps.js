@@ -7,7 +7,7 @@ import Chat from "./pages/chat/index";
 import { ToastContainer } from 'react-toastify';
 import UploadVideo from './header/upload.js';
 import MyAccount from './pages/profile/myAccount.js';
-import { profile } from './api service/api';
+// import { profile } from './api service/api';
 export default function Apps() {
   let navigate = useNavigate()
 

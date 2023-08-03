@@ -5,12 +5,9 @@ import { BiMessageAdd } from "react-icons/bi";
 import {
   MDBCard,
   MDBCardBody,
-  // MDBCardTitle,
-  // MDBCardText,
   MDBCardHeader,
   MDBCardFooter,
   MDBInput,
-  // MDBBtn
 } from "mdb-react-ui-kit";
 import Header from "../../header";
 
@@ -30,7 +27,6 @@ import {
   WriteChat,
   allUser,
   getByIdChat,
-  getchat,
   getchatId,
   profile,
   userGetChat,
@@ -72,6 +68,7 @@ const Chat = () => {
           label: (
             <div>
               <img
+              alt="profileImage"
                 src={i.profilePicture}
                 style={{ borderRadius: "50%", marginRight: "10px" }}
                 height="30px"

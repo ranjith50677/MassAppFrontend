@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
@@ -27,6 +28,7 @@ export default function LabTabs({pronalid}) {
       setAccount(!account)
     }
     handel()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>

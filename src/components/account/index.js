@@ -7,6 +7,7 @@ const Parsonal=({profiledata,open,setOpen})=>{
 const[profileid,setProfileid]=useState("")
 useEffect(()=>{
     setProfileid(profiledata?.postedBy)
+    // eslint-disable-next-line
 },[])
     return(
        <>

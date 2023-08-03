@@ -82,6 +82,7 @@ console.log(refresh);
 
 const removeCommment=async(i,j)=>{
   let res =await deleteComment(i?._id,{commentId:j?._id})
+  console.log(res);
   setRefresh(!refresh);
   toast.success("delete sucessfully")
 }

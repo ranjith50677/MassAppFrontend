@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Grid from "@mui/material/Grid";
 import { useState } from "react";
 import Card from "@mui/material/Card";
@@ -27,7 +28,7 @@ import Box from "@mui/joy/Box";
 import "../Home/style.scss";
 import { useEffect } from "react";
 import {
-  Comment,
+  // Comment,
   DeleteVideo,
   UserByIdVideos,
   UserVideos,
@@ -90,6 +91,7 @@ export default function RecipeReviewCard({prosnalid}) {
     try {
       let respos = await UserVideos();
       let res= await UserByIdVideos(prosnalid)
+     // eslint-disable-next-line no-lone-blocks
      {prosnalid ===undefined ? setAllvideo(respos?.data?.videos) : setAllvideo(res?.data?.videos)}
       let response = await profile();
       setId(response?.data?.data?._id);
@@ -117,6 +119,7 @@ export default function RecipeReviewCard({prosnalid}) {
   };
   useEffect(() => {
     handle()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   },[id,refresh]);
 console.log(text);
   return (
