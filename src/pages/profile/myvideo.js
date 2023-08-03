@@ -46,7 +46,6 @@ import CommentModal from "../../components/model";
 
 
 export default function RecipeReviewCard({prosnalid}) {
-  console.log(prosnalid,"dvghvdahgas");
   // const [italic, setItalic] = useState(false);
   const [comment, setComment] = useState(false);
   const [allvideo, setAllvideo] = useState([]);
@@ -90,7 +89,9 @@ export default function RecipeReviewCard({prosnalid}) {
   const handle = async () => {
     try {
       let respos = await UserVideos();
+      console.log(respos);
       let res= await UserByIdVideos(prosnalid)
+      console.log(res);
      // eslint-disable-next-line no-lone-blocks
      {prosnalid ===undefined ? setAllvideo(respos?.data?.videos) : setAllvideo(res?.data?.videos)}
       let response = await profile();

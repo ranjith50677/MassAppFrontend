@@ -38,7 +38,7 @@ export default function RecipeReviewCard() {
   const [zIndex, setZIndex] = useState(0);
 
   const [show, setShow] = useState({ like: false, id: 0 }); 
-
+console.log(followingdata);
   const showlike = async (i, index) => {
     console.log("hi");
     if (show.like === false && !i.likes.includes(id)) {
@@ -83,9 +83,9 @@ export default function RecipeReviewCard() {
       setAllvideo(res?.data?.videos)
       let response = await profile();
       console.log(response?.data?.data?._id);
-      setFollowingdata(response?.data?.data?.following)
       console.log(followingdata);
       setId(response?.data?.data?._id);
+      setFollowingdata(response?.data?.data?.following)
     } catch (error) {
       console.log(error.message);
     }
@@ -158,10 +158,10 @@ export default function RecipeReviewCard() {
                             {i?.postedBy?.username}
                           </Typography>
                            <>  
-                          {followingdata.length === 0 && id!==i.postedBy._id ?
+                          {followingdata?.length === (0 || undefined) && id!==i.postedBy._id ?
                           <Button variant="outlined" style={{fontSize:"8px",marginLeft:"10px",color:"white"}} onClick={()=>following(i)}>follow</Button>:null}
                          
-                          {i?.postedBy?._id !== id && followingdata.length !== 0 ? followingdata.includes(i?.postedBy?._id ) ? 
+                          {i?.postedBy?._id !== id && followingdata.length !== (0 || undefined) ? followingdata.includes(i?.postedBy?._id ) ? 
                             <Button key={index} variant="outlined" style={{fontSize:"8px",marginLeft:"10px",color:"white"}} onClick={()=>unfollow(i)}>unfollow</Button>:
                             <Button key={index} variant="outlined" style={{fontSize:"8px",marginLeft:"10px",color:"white"}} onClick={()=>following(i)}>follow</Button> :null}
                           </>
