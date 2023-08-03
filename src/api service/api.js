@@ -1,5 +1,4 @@
-
-let baseUrl = "http://192.168.1.30:7373/api/";
+let baseUrl = "http://localhost:7373/api/";
 /***************************************************************************************USER API ********************************************************/
 export const userLogin = async (body) => {
   const requestOptions = {
