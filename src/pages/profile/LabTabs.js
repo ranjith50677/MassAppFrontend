@@ -13,6 +13,7 @@ import RowAndColumnSpacing from './myvideo';
 
 
 export default function LabTabs({pronalid}) {
+  console.log(pronalid);
   const [value, setValue] =useState('1');
   const [data1,setData1]=useState([])
   const [account,setAccount]=useState(false)

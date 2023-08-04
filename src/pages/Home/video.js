@@ -155,13 +155,13 @@ export default function RecipeReviewCard() {
                               fontFamily: "serif",
                             }}
                           >
-                            {i?.postedBy?.username}
+                            {i?.postedBy?.username} 
                           </Typography>
                            <>  
-                          {followingdata.length === 0 && id!==i.postedBy._id ?
+                          {followingdata?.length === 0 && id!==i.postedBy._id ?
                           <Button variant="outlined" style={{fontSize:"8px",marginLeft:"10px",color:"white"}} onClick={()=>following(i)}>follow</Button>:null}
                          
-                          {i?.postedBy?._id !== id && followingdata.length !== 0 ? followingdata.includes(i?.postedBy?._id ) ? 
+                          {i?.postedBy?._id !== id && followingdata?.length !== 0 ? followingdata?.includes(i?.postedBy?._id ) ? 
                             <Button key={index} variant="outlined" style={{fontSize:"8px",marginLeft:"10px",color:"white"}} onClick={()=>unfollow(i)}>unfollow</Button>:
                             <Button key={index} variant="outlined" style={{fontSize:"8px",marginLeft:"10px",color:"white"}} onClick={()=>following(i)}>follow</Button> :null}
                           </>
