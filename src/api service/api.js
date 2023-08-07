@@ -460,6 +460,25 @@ export const getchatId = async (id ) => {
   let data = await response?.json();
   return { data: data, ok: true };
 };
+export const deleteMessage = async (id,messageId) => {
+  let token = localStorage.getItem("token");
+  let gettoken=JSON.parse(token)
+  const requestOptions ={
+    method: "DELETE",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token:gettoken
+    }, 
+  };
+  const response = await fetch(`${baseUrl}message/deletemessage/${id}?messageId=${messageId}`, requestOptions);
+  if (!response.ok) {
+    let data = await response.json();
+    return { data: data, ok: false };
+  }
+  let data = await response?.json();
+  return { data: data, ok: true };
+};
 /*************************************************************************************** Group  CHAT API ********************************************************/
 
 export const groupchatCreate = async (body) => {
@@ -506,7 +525,7 @@ export const removeGroupUser = async (id,body) => {
   let token = localStorage.getItem("token");
   let gettoken=JSON.parse(token)
   const requestOptions ={
-    method: "DELETE",
+    method: "PUT",
     mode: "cors",
     headers: {
       "Content-Type": "application/json",

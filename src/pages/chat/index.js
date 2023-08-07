@@ -14,7 +14,8 @@ import Header from "../../header";
 
 import { MDBRow, MDBCol } from "mdb-react-ui-kit";
 import "./chat.css";
-
+import { Menu, MenuItem } from "@mui/material";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -27,6 +28,7 @@ import {
   UserChat,
   WriteChat,
   allUser,
+  deleteMessage,
   getByIdChat,
   getchatId,
   profile,
@@ -37,11 +39,11 @@ import { Box, Typography } from "@mui/material";
 import ScrollableFeed from "react-scrollable-feed";
 import _ from "lodash";
 import GroupChat from "./chat";
-// import jwt_decode from "jwt-decode";
+import IconButton1 from "@mui/material/IconButton";
+import moment from "moment/moment";
 
 const Chat = () => {
-  // let token = localStorage.getItem("token");
-  // let decoded = jwt_decode(token);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [data1, setData1] = useState([]);
   const [allData, setAllData] = useState([]);
   const [basicModal, setBasicModal] = useState(false);
@@ -56,12 +58,12 @@ const Chat = () => {
   const [demo, setDemo] = useState([]);
   const [searchinput, setSearchinput] = useState();
   const [reload, setReload] = useState(false);
+  const [group, setGroup] = useState(false);
   const user = async () => {
     let data = [];
     let res = await allUser();
-    setAllData(res?.data?.users)
+    setAllData(res?.data?.users);
     let pro = await profile();
-    console.log(pro);
     let reschat = await userGetChat();
     let sort = _.sortBy(reschat.data, (i) => {
       return new Date(i?.updatedAt);
@@ -118,6 +120,7 @@ const Chat = () => {
     });
     if (found === false) {
       let res = await UserChat({ newUsers: e.id });
+      console.log(res);
       let response = await getchatId(res?.data?.data._id);
       setchatId(res?.data?.data?._id);
       response?.data?.map((i) => {
@@ -147,14 +150,30 @@ const Chat = () => {
     setSendMessage("");
   };
 
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+const deletemessage=async(i)=>{
+await deleteMessage(chatId,i?._id)
+setAnchorEl(null)
+setReload(!reload)
+  }
+
   useEffect(() => {
     let fetch = async () => {
       let res = await getByIdChat(chatId);
       setSend(res.data.messages);
+      setGroup(res.data.isGroup)
     };
     if (chatId) fetch();
   }, [chatId, reload]);
-  console.log(demo);
+
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   useEffect(() => {
     user();
   }, [reload]);
@@ -212,7 +231,7 @@ const Chat = () => {
                 >
                   {demo?.map((i, index) =>
                     !i.isGroup ? (
-                      i?.users.map((j, index) => {
+                      i?.users?.map((j, index) => {
                         if (j._id !== id) {
                           return (
                             <ul key={index}>
@@ -267,21 +286,23 @@ const Chat = () => {
                   <Typography
                     style={{ fontFamily: "serif", fontSize: "larger" }}
                   >
-                    {chatData.toUpperCase()}
+                    {chatData.toUpperCase()} 
                   </Typography>{" "}
                   <Avatar
                     src={chatpic}
                     style={{ cursor: "pointer" }}
                     onClick={() => {
-                      setAction("view");
-                      setBasicModal(!basicModal);
+                      if(group===true){
+                        setAction("view");
+                        setBasicModal(!basicModal);
+                      }
                     }}
                   />{" "}
                 </MDBCardHeader>
                 <MDBCardBody
                   style={{
                     background:
-                      'url("https://wallpapercave.com/wp/wp5593679.jpg") no-repeat',
+                      'url("https://i.ytimg.com/vi/QNAYhssraok/maxresdefault.jpg") no-repeat',
                     backgroundSize: "cover",
                     overflow: "hidden",
                     display: "flex",
@@ -352,6 +373,8 @@ const Chat = () => {
                                 marginRight: "10px",
                               }}
                             >
+                              <div style={{display:"flex",alignItems:"center"}}>
+
                               <Typography
                                 style={{
                                   fontFamily: "serif",
@@ -362,6 +385,34 @@ const Chat = () => {
                               >
                                 {i?.message}
                               </Typography>
+                              
+                              
+
+                              <IconButton1
+                                aria-label="settings"
+                                id="basic-button"
+                                aria-controls={open ? "basic-menu" : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? "true" : undefined}
+                                onClick={handleClick}
+                              >
+                                <MoreVertIcon style={{ color: "white" }} />
+                              </IconButton1>
+                              <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                  "aria-labelledby": "basic-button",
+                                }}
+                              >
+                                <MenuItem onClick={()=>deletemessage(i)}>Delete</MenuItem>
+                              </Menu>
+                              </div>
+                              <div style={{fontSize: "11px",color:"#c9c0c0"}}>
+                                {moment(i.createdAt).format('LT')}
+                              </div>
                             </div>
                           </Box>
                         )}
@@ -375,8 +426,8 @@ const Chat = () => {
                 >
                   <form
                     onSubmit={(e) => {
-                      e.preventDefault()
-                      messagehandel()
+                      e.preventDefault();
+                      messagehandel();
                     }}
                     style={{ width: "100%" }}
                   >

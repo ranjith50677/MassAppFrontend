@@ -45,35 +45,27 @@ export default function GroupChat({
   action,
   chatId,
   id,
+  setGroup,
+  group
 }) {
   const [selectuser, setselectuser] = useState([]);
-  const [demo, setDemo] = useState([
-    {
-      username:"demo",
-      profilePicture:"https://th.bing.com/th/id/OIP.bpJTixcJ9eRwEFjKsApJ8QHaEo?pid=ImgDet&rs=1"
-    }
-  ]);
-  const [demo1, setDemo1] = useState([
-    {
-      username:"demo1",
-      profilePicture:"https://th.bing.com/th/id/OIP.bpJTixcJ9eRwEFjKsApJ8QHaEo?pid=ImgDet&rs=1"
-    }
-  ]);
-  const [add,setAdd] = useState([]);
-  const [users, setUsers] = useState([])
-  const [reloadData, setReloadData] = useState(false)
+  const [add, setAdd] = useState([]);
+  const [checkData, setCheckData] = useState([]);
+  const [removeId, setRemoveId] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [reloadData, setReloadData] = useState(false);
   const [editUsers, setEditUsers] = useState([]);
   const [groupName, setGroupName] = useState("");
 
   const groupCreate = async () => {
-    if(groupName==="") return toast.error("please enter GroupName")
-      let res = await groupchatCreate({ groupName, users });
-      if (res?.ok) {
-        toast.success(res.data.message);
-        setBasicModal(!basicModal);
-        setReload(!reload);
-      }
-      if (!res?.ok) return toast.error(res.data.message);
+    if (groupName === "") return toast.error("please enter GroupName");
+    let res = await groupchatCreate({ groupName, users });
+    if (res?.ok) {
+      toast.success(res.data.message);
+      setBasicModal(!basicModal);
+      setReload(!reload);
+    }
+    if (!res?.ok) return toast.error(res.data.message);
   };
 
   const adduser = () => {
@@ -86,60 +78,91 @@ export default function GroupChat({
 
   const getChat = async () => {
     let arr = [];
-    let filterdata=[]
+    let filterdata = [];
     let res = await getgroupchatId(chatId);
+    console.log(res);
     res?.data?.map((i) => {
-      i.users.map((j) => {
+      i?.users?.map((j) => {
         if (j?._id !== id) return arr.push(j);
       });
-    })   
+    });
     setEditUsers(arr);
-    allData?.map((item)=>{
-      let found=arr.some(j => item._id == j._id)
-      if(!found && item._id !== id){
-        filterdata.push(item)
+    allData?.map((item) => {
+      let found = arr.some((j) => item._id == j._id);
+      if (!found && item._id !== id) {
+        filterdata.push(item);
       }
-    })
+    });
     setAdd(filterdata);
+    setCheckData(arr);
+    setRemoveId(filterdata);
     // setAdd(filterdata)
   };
 
-  
-  const remove = async (i) => {
-    let res = await removeGroupUser(chatId, {
-      userId: i._id,
+  const remove = async () => {
+    let userId = [];
+    console.log(removeId);
+    add.map((item) => {
+      let found = removeId.some((j) => item._id == j._id);
+      if (!found && item._id !== id) {
+        userId.push(item._id);
+      }
     });
-    if (res.ok){
-      toast.success(res.data.message)
-      setReload(!reload)
-      setReloadData(!reloadData)
+    if (userId.length !== 0) {
+      let res = await removeGroupUser(chatId, {
+        userId: userId,
+      });
+      if (res.ok) {
+        toast.success(res.data.message);
+        // setReload(!reload)
+        // setReloadData(!reloadData)
+      }
     }
   };
-  
-  const adduserdata=async(i)=>{
-   let response=await addGroupUser(chatId,{
-    userId:i._id
-   })
-   console.log(response)
-  }
 
-  const demohandel=(i,index)=>{
-    console.log(index)
-  let a=[...editUsers,i]
-  add.splice(index,1)
-  setEditUsers(a)
-  }
-  const removedemohandel=(i,index)=>{
-  let a=[...add,i]
-  editUsers.splice(index,1)
-  setAdd(a)
-  }
+  const adduserdata = async () => {
+    let userId = [];
+    editUsers.map((item) => {
+      let found = checkData.some((j) => item._id == j._id);
+      if (!found && item._id !== id) {
+        userId.push(item._id);
+      }
+    });
+    console.log(userId);
+    if (userId.length !== 0) {
+      let response = await addGroupUser(chatId, {
+        userId: userId,
+      });
+      if (response.ok) {
+        toast.success(response.data.message);
+        // setReload(!reload)
+        // setReloadData(!reloadData)
+      }
+      if (!response.ok) {
+        toast.error(response.data.message);
+        // setReload(!reload)
+        // setReloadData(!reloadData)
+      }
+    }
+  };
+
+  const demohandel = (i, index) => {
+    console.log(index);
+    let a = [...editUsers, i];
+    add.splice(index, 1);
+    setEditUsers(a);
+  };
+  const removedemohandel = (i, index) => {
+    let a = [...add, i];
+    editUsers.splice(index, 1);
+    setAdd(a);
+  };
 
   useEffect(() => {
     getChat();
     adduser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectuser,reloadData]);
+  }, [selectuser, reloadData]);
 
   return (
     <div style={{ width: "100%" }}>
@@ -178,8 +201,14 @@ export default function GroupChat({
                 </>
               ) : (
                 <>
-              
-                  <MDBModalTitle>Remove User</MDBModalTitle>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <MDBModalTitle>ADD User</MDBModalTitle>
+                    <Button variant="contained" onClick={adduserdata}>
+                      <GrAddCircle />
+                    </Button>
+                  </div>
                   <hr
                     style={{
                       margin: 0,
@@ -192,7 +221,7 @@ export default function GroupChat({
                     {editUsers?.map((i, index) => (
                       <Fragment key={index}>
                         <MDBCol size="md">
-                          <Box style={{cursor:"pointer"}} onClick={()=>removedemohandel(i,index)}>
+                          <Box>
                             <div
                               style={{
                                 maxWidth: "75%",
@@ -203,7 +232,9 @@ export default function GroupChat({
                                 wordBreak: "break-word",
                                 marginBottom: "1px",
                                 borderRadius: "40px",
+                                cursor: "pointer",
                               }}
+                              onClick={() => removedemohandel(i, index)}
                             >
                               <div
                                 style={{
@@ -213,10 +244,7 @@ export default function GroupChat({
                               >
                                 <Avatar src={i?.profilePicture} />
                                 <Typography>{i?.username}</Typography>
-                                <CiCircleRemove
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => remove(i)}
-                                />
+                                <CiCircleRemove />
                               </div>
                             </div>
                           </Box>
@@ -224,57 +252,64 @@ export default function GroupChat({
                         </MDBCol>
                       </Fragment>
                     ))}
-                   
                   </MDBRow>
                   <Card variant="outlined">
-                      <Divider />
-                     <div>
-                     <MDBModalTitle>ADD User</MDBModalTitle>
-                     <Button variant="contained"><GrAddCircle /></Button>
-                      </div> 
-                      <hr
-                        style={{
-                          margin: 0,
-                          backgroundColor: "#1c1414",
-                          width: "95px",
-                          marginBottom: "10px",
-                        }}
-                      />
-                      <MDBRow>
-                       
-                        {add?.map((i,index)=> 
-                         <Fragment key={index}>
-                        <MDBCol size="md">
-                          <Box style={{ cursor: "pointer" }} onClick={()=>demohandel(i,index)}>
-                            <div
-                              style={{
-                                maxWidth: "75%",
-                                width: "fit-content",
-                                minWidth: "fit-content",
-                                background: "#13b1d799",
-                                padding: "10px",
-                                wordBreak: "break-word",
-                                marginBottom: "1px",
-                                borderRadius: "40px",
-                              }}
-                            >
+                    <Divider />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <MDBModalTitle>Remove User</MDBModalTitle>
+                      <Button variant="contained" onClick={remove}>
+                        <CiCircleRemove />
+                      </Button>
+                    </div>
+                    <hr
+                      style={{
+                        margin: 0,
+                        backgroundColor: "#1c1414",
+                        width: "95px",
+                        marginBottom: "10px",
+                      }}
+                    />
+                    <MDBRow>
+                      {add?.map((i, index) => (
+                        <Fragment key={index}>
+                          <MDBCol size="md">
+                            <Box>
                               <div
                                 style={{
-                                  display: "flex",
-                                  alignItems: "center",
+                                  maxWidth: "75%",
+                                  width: "fit-content",
+                                  minWidth: "fit-content",
+                                  background: "#13b1d799",
+                                  padding: "10px",
+                                  wordBreak: "break-word",
+                                  marginBottom: "1px",
+                                  borderRadius: "40px",
+                                  cursor: "pointer",
                                 }}
+                                onClick={() => demohandel(i, index)}
                               >
-                                <Avatar src={i?.profilePicture}/>
-                                <Typography>{i?.username}</Typography>
-                                <GrAddCircle />
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                  }}
+                                >
+                                  <Avatar src={i?.profilePicture} />
+                                  <Typography>{i?.username}</Typography>
+                                  <GrAddCircle />
+                                </div>
                               </div>
-                            </div>
-                          </Box>
-                        </MDBCol>
-                        </Fragment>)}
-                      </MDBRow>
-                      <br />
-                 
+                            </Box>
+                          </MDBCol>
+                        </Fragment>
+                      ))}
+                    </MDBRow>
+                    <br />
                   </Card>
                 </>
               )}
