@@ -1,10 +1,4 @@
-import jwt_decode from "jwt-decode";
-let token = localStorage.getItem("token");
-let decoded
-if(token){
-   decoded = jwt_decode(token);
-}
-let baseUrl = "http://localhost:7373/api/";
+let baseUrl = "http://192.168.1.31:7373/api/";
 /***************************************************************************************USER API ********************************************************/
 export const userLogin = async (body) => {
   const requestOptions = {
@@ -54,7 +48,7 @@ export const profile = async() => {
     },
  
   };
-  const response = await fetch(`${baseUrl}user/profile/${decoded?.id}`, requestOptions);
+  const response = await fetch(`${baseUrl}user/profile`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
