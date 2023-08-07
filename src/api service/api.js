@@ -1,9 +1,4 @@
-import jwt_decode from "jwt-decode";
-let token = localStorage.getItem("token");
-let decoded
-if(token){
-   decoded = jwt_decode(token);
-}
+
 let baseUrl = "http://localhost:7373/api/";
 /***************************************************************************************USER API ********************************************************/
 export const userLogin = async (body) => {
@@ -54,7 +49,7 @@ export const profile = async() => {
     },
  
   };
-  const response = await fetch(`${baseUrl}user/profile/${decoded?.id}`, requestOptions);
+  const response = await fetch(`${baseUrl}user/profile`, requestOptions);
   if (!response.ok) {
     let data = await response.json();
     return { data: data, ok: false };
@@ -487,6 +482,7 @@ export const groupchatCreate = async (body) => {
   let data = await response?.json();
   return { data: data, ok: true };
 };
+
 export const getgroupchatId = async (id) => {
   let token = localStorage.getItem("token");
   let gettoken=JSON.parse(token)
@@ -506,3 +502,44 @@ export const getgroupchatId = async (id) => {
   let data = await response?.json();
   return { data: data, ok: true };
 };
+export const removeGroupUser = async (id,body) => {
+  let token = localStorage.getItem("token");
+  let gettoken=JSON.parse(token)
+  const requestOptions ={
+    method: "DELETE",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token:gettoken
+    }, 
+    body: JSON.stringify(body),
+  };
+  const response = await fetch(`${baseUrl}chat/removeuser/${id}`, requestOptions);
+  if (!response.ok) {
+    let data = await response.json();
+    return { data: data, ok: false };
+  }
+  let data = await response?.json();
+  return { data: data, ok: true };
+}
+
+export const addGroupUser = async (id,body) => {
+  let token = localStorage.getItem("token");
+  let gettoken=JSON.parse(token)
+  const requestOptions ={
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Content-Type": "application/json",
+      token:gettoken
+    }, 
+    body: JSON.stringify(body),
+  };
+  const response = await fetch(`${baseUrl}chat/adduser/${id}`, requestOptions);
+  if (!response.ok) {
+    let data = await response.json();
+    return { data: data, ok: false };
+  }
+  let data = await response?.json();
+  return { data: data, ok: true };
+}
