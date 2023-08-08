@@ -164,7 +164,7 @@ setReload(!reload)
   useEffect(() => {
     let fetch = async () => {
       let res = await getByIdChat(chatId);
-      setSend(res.data.messages);
+      setSend(res.data.messages)
       setGroup(res.data.isGroup)
     };
     if (chatId) fetch();
